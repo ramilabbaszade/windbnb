@@ -1,25 +1,36 @@
 <template>
-  <div class="list_header">
-    <h2>Stays in Finland</h2>
-    <span>{{posts.length}} stays</span>
+  <div>
+    <Navigation/>
+    <div class="list_header">
+      <h2>Stays in Finland</h2>
+      <span>{{ posts.length }} stays</span>
+    </div>
+    <ul class="posts_container">
+      <li class="post_container_li" v-for="post in posts" v-bind:key="post.id">
+        <PostItem
+          :title="post.title"
+          :img="post.img"
+          :superhost="post.superhost"
+          :rating="post.rating"
+          :apartmentType="post.apartmentType"
+        />
+      </li>
+    </ul>
+    <Footer />
   </div>
-  <ul class="posts_container">
-    <li class="post_container_li" v-for="post in posts" v-bind:key="post.id">
-      <PostItem :title="post.title" :img="post.img" :superhost="post.superhost" :rating="post.rating"/>
-    </li>
-  </ul>
-  <Footer />
 </template>
 
 <script>
 import PostItem from "./components/PostItem";
 import Footer from "./components/Footer";
+import Navigation from "./components/Navigation";
 
 export default {
   name: "App",
   components: {
     PostItem,
     Footer,
+    Navigation,
   },
   data() {
     return {
@@ -28,29 +39,33 @@ export default {
           id: 1,
           title: "Stylist apartment in center of the city",
           img: "../assets/hotel.jpeg",
-          superhost:true,
-          rating:4.2
+          apartmentType:"Entire apartment",
+          superhost: true,
+          rating: 4.2,
         },
         {
           id: 2,
           title: "Cozy, peaceful and private room with...",
           img: "../assets/hotel.jpeg",
-          superhost:false,
-          rating:4.5
+          apartmentType:"Private Room",
+          superhost: false,
+          rating: 4.5,
         },
         {
           id: 3,
           title: "Cozy, peaceful and private room with...",
           img: "../assets/hotel.jpeg",
-          superhost:false,
-          rating:4
+          apartmentType:"Entire house",
+          superhost: false,
+          rating: 4,
         },
         {
           id: 4,
           title: "Cozy, peaceful and private room with...",
           img: "../assets/hotel.jpeg",
-          superhost:true,
-          rating:3.9
+          apartmentType:"Entire house",
+          superhost: true,
+          rating: 3.9,
         },
       ],
     };
@@ -67,13 +82,14 @@ export default {
   width: 1150px;
   margin: 0 auto;
 }
-li{
+li {
   list-style-type: none;
 }
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Montserrat','Mulish', sans-serif;
 }
 .posts_container {
   display: grid;
@@ -91,5 +107,8 @@ li{
   display: flex;
   justify-content: space-between;
   margin: 1rem 0;
+}
+.icon_png {
+  width: 14px;
 }
 </style>

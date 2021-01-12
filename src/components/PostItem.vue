@@ -1,16 +1,32 @@
 <template>
+  <div>
   <div class="post_image">
     <img :src="img" :alt="title" />
   </div>
   <div class="post_info_container">
     <div class="post_info">
       <div class="post_info-superhost" v-if="superhost">SUPER HOST</div>
-      <div class="post_info-extra">Entire apartment . 2 beds</div>
-      <div class="post_info-rating"> {{rating}}</div>
+      <div class="post_info-extra"> {{apartmentType}} </div>
+      <div class="post_info-rating"> <img src='../../public/assets/icons/star.png' alt="star" class="icon_png"> {{rating}}</div>
     </div>
     <div class="post_header">{{ title }}</div>
   </div>
+  </div>
 </template>
+
+<script>
+export default {
+  name: "PostItem",
+  props: {
+    title: String,
+    img: String,
+    superhost:Boolean,
+    rating:Number,
+    apartmentType:String
+  },
+};
+</script>
+
 
 <style >
 .post_header {
@@ -51,15 +67,3 @@
   font-size: 14px;
 }
 </style>
-
-<script>
-export default {
-  name: "PostItem",
-  props: {
-    title: String,
-    img: String,
-    superhost:Boolean,
-    rating:Number
-  },
-};
-</script>
