@@ -1,74 +1,76 @@
 <template>
-  <div>
-    <Navigation/>
-    <div class="list_header">
-      <h2>Stays in Finland</h2>
-      <span>{{ posts.length }} stays</span>
-    </div>
-    <ul class="posts_container">
-      <li class="post_container_li" v-for="post in posts" v-bind:key="post.id">
-        <PostItem
-          :title="post.title"
-          :img="post.img"
-          :superhost="post.superhost"
-          :rating="post.rating"
-          :apartmentType="post.apartmentType"
-        />
-      </li>
-    </ul>
-    <Footer />
-  </div>
+  <Navigation :posts="posts" />
+  <Apartments :posts="filterData"/>
+  <Footer />
 </template>
 
 <script>
-import PostItem from "./components/PostItem";
 import Footer from "./components/Footer";
 import Navigation from "./components/Navigation";
+import appartamentsData from './apartmentsData.json';
+import Apartments from './components/Apartments.vue';
 
 export default {
   name: "App",
   components: {
-    PostItem,
     Footer,
     Navigation,
+    Apartments,
   },
   data() {
     return {
-      posts: [
-        {
-          id: 1,
-          title: "Stylist apartment in center of the city",
-          img: "../assets/hotel.jpeg",
-          apartmentType:"Entire apartment",
-          superhost: true,
-          rating: 4.2,
-        },
-        {
-          id: 2,
-          title: "Cozy, peaceful and private room with...",
-          img: "../assets/hotel.jpeg",
-          apartmentType:"Private Room",
-          superhost: false,
-          rating: 4.5,
-        },
-        {
-          id: 3,
-          title: "Cozy, peaceful and private room with...",
-          img: "../assets/hotel.jpeg",
-          apartmentType:"Entire house",
-          superhost: false,
-          rating: 4,
-        },
-        {
-          id: 4,
-          title: "Cozy, peaceful and private room with...",
-          img: "../assets/hotel.jpeg",
-          apartmentType:"Entire house",
-          superhost: true,
-          rating: 3.9,
-        },
-      ],
+      aisdeOpen: false,
+      adult: 0,
+      child: 0,
+      appartamentsData,
+      filterData: JSON.parse(JSON.stringify(appartamentsData)),
+      citiesData: [],
+      city: null,
     };
+  },
+  methods: {
+    toggleAside() {
+      this.aisdeOpen = !this.aisdeOpen;
+    },
+    adults(value) {
+      this.adult = value;
+    },
+    childrens(value) {
+      this.child = value;
+    },
+    filterGuests() {
+      let temp = this.appartamentsData;
+      if (this.city) {
+        temp = temp
+          .filter((el) => el.city === this.city)
+          .filter((el) => el.maxGuests >= this.adult + this.child);
+      } else {
+        temp = this.appartamentsData
+          .filter((el) => el.maxGuests >= this.adult + this.child);
+      }
+      console.log(this.city);
+      this.filterData = temp;
+      this.aisdeOpen = false;
+    },
+    filterCity(value) {
+      if (value) {
+        const [city] = value.split(' ');
+        this.city = city;
+      } else {
+        this.city = null;
+      }
+    },
+  },
+  computed: {
+    guests() {
+      return this.adult + this.child;
+    },
+  },
+  created() {
+    const cities = [...new Set(appartamentsData.map((el) => el.city))];
+    cities.forEach((el) => {
+      this.citiesData = [...this.citiesData, `${el} ${appartamentsData.find((fel) => fel.city === el).country}`];
+    });
   },
 };
 </script>
@@ -79,8 +81,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  width: 1150px;
-  margin: 0 auto;
 }
 li {
   list-style-type: none;
@@ -89,12 +89,12 @@ li {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Montserrat','Mulish', sans-serif;
+  font-family: "Montserrat", "Mulish", sans-serif;
 }
 .posts_container {
   display: grid;
-  grid-template-columns: 33% 33% 33%;
-  gap: 10px;
+  grid-template-columns: 25% 25% 25% 25%;
+  column-gap: 2px;
 }
 .post_container_li {
   width: 100%;
@@ -102,6 +102,7 @@ li {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
 }
 .list_header {
   display: flex;
