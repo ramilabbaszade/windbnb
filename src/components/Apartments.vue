@@ -8,9 +8,9 @@
       <PostItem
         :title="post.title"
         :src="post.photo"
-        :superhost="post.superhost"
+        :superhost="post.superHost"
         :rating="post.rating"
-        :apartmentType="post.apartmentType"
+        :apartmentType="post.type"
       />
     </li>
   </ul>
